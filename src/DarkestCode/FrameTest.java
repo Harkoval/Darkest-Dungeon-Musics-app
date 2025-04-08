@@ -75,8 +75,9 @@ public class FrameTest extends JFrame {
 		contentPane.setComponentZOrder(title, 0);
 		
 		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"The Hamlet", "The ruins", "Cove battle"}));
-		comboBox.setBounds(10, 191, 81, 22);
+		comboBox.setMaximumRowCount(18);
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"The Hamlet", "Main Theme", "Ruins", "Ruins Battle", "Camp", "Warrens Battle", "Warrens Battle - 2", "Weald Battle", "Terror & Madness", "House Of Ruin", "Siren Battle", "Final Combat", "The End", "Town in Chaos", "Bloodletting", "Mocking Thirst", "Forbidden Tannin"}));
+		comboBox.setBounds(10, 171, 114, 22);
 		contentPane.add(comboBox);
 		
 		
@@ -114,7 +115,7 @@ public class FrameTest extends JFrame {
 		        }
 			}
 		});
-		btnPlay.setBounds(10, 224, 81, 23);
+		btnPlay.setBounds(10, 204, 70, 23);
 		contentPane.add(btnPlay);
 		contentPane.setComponentZOrder(btnPlay, 0);
 		
