@@ -11,11 +11,26 @@ import javax.swing.ImageIcon;
 import java.awt.Toolkit;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.io.InputStream;
+import java.util.Properties;
+import javazoom.jl.player.Player;
+
+
 
 public class FrameTest extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private Player player;
+	private Thread musicThread;  // Variable pour stocker le thread
+	private void stopMusic() {
+        if (musicThread != null && musicThread.isAlive()) {
+            musicThread.interrupt();  // **Interrompt le thread de musique si il est en cours d'exécution**
+            player.close();  // Ferme le lecteur pour libérer les ressources
+        }
+    }
 
 	/**
 	 * Launch the application.
@@ -64,7 +79,41 @@ public class FrameTest extends JFrame {
 		comboBox.setBounds(10, 191, 81, 22);
 		contentPane.add(comboBox);
 		
+		
 		JButton btnPlay = new JButton("Play");
+		btnPlay.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				stopMusic();
+				
+				String SelectedItem = (String) comboBox.getSelectedItem();
+				String filePath = "/DarkestCode/Ressources/" + SelectedItem + ".mp3";
+				
+				try {
+		            // Récupère le fichier via getResourceAsStream
+		            InputStream audioSrc = FrameTest.class.getResourceAsStream(filePath);
+		            
+		            if (audioSrc != null) {
+		                // Crée une nouvelle instance du Player avec l'InputStream
+		                player = new Player(audioSrc);
+		                
+		                // Crée un thread pour jouer la musique sans bloquer l'interface utilisateur
+		                musicThread = new Thread(() -> {
+		                    try {
+		                        player.play();  // Joue la musique
+		                    } catch (Exception ex) {
+		                        ex.printStackTrace();
+		                    }
+		                });
+		                musicThread.start();  // Lance le thread
+		            } else {
+		                // Si le fichier n'a pas été trouvé, affiche une erreur
+		                System.out.println("Le fichier n'a pas été trouvé : " + filePath);
+		            }
+		        } catch (Exception ex) {
+		            ex.printStackTrace();
+		        }
+			}
+		});
 		btnPlay.setBounds(10, 224, 81, 23);
 		contentPane.add(btnPlay);
 		contentPane.setComponentZOrder(btnPlay, 0);
